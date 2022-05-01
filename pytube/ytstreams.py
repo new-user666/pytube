@@ -1,11 +1,12 @@
 # This module is made for getting json of yt video details
 def get_streams(YouTube):
-  """
-  YouTube : Youtube object
-    from pytube.ytstreams import get_streams
-    yt = YouTube(yt_url)
-    get_streams(yt)
-  """
+    """
+    YouTube : Youtube object
+        from pytube.ytstreams import get_streams
+        yt = YouTube(yt_url)
+        get_streams(yt)
+    """
+
     qualities = YouTube.vid_info['streamingData']
     dash = qualities['adaptiveFormats']
     progressive = qualities['formats']
@@ -23,7 +24,7 @@ def get_streams(YouTube):
             stream['resolution'] = i['qualityLabel']
             stream['pixel_size'] = f"{i['width']}x{i['height']}"
         try:
-            stream['file_size'] = i['contentLength']
+            stream['file_size'] = int(i['contentLength'])
         except KeyError:
             pass
 
@@ -44,7 +45,7 @@ def get_streams(YouTube):
         }
 
         try:
-            stream['file_size'] = i['contentLength']
+            stream['file_size'] = int(i['contentLength'])
         except KeyError:
             pass
 
