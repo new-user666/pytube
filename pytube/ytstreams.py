@@ -6,7 +6,7 @@ def get_streams(YouTube):
         yt = YouTube(yt_url)
         get_streams(yt)
     """
-
+    streams = YouTube.streams
     qualities = YouTube.vid_info['streamingData']
     dash = qualities['adaptiveFormats']
     progressive = qualities['formats']
@@ -26,7 +26,7 @@ def get_streams(YouTube):
         try:
             stream['file_size'] = int(i['contentLength'])
         except KeyError:
-            pass
+            stream['file_size'] = int(streams.get_by_itag(itag).filesize)
 
         streamList.append(stream)
 
@@ -47,7 +47,7 @@ def get_streams(YouTube):
         try:
             stream['file_size'] = int(i['contentLength'])
         except KeyError:
-            pass
+            stream['file_size'] = int(streams.get_by_itag(itag).filesize)
 
         streamList.append(stream)
 
