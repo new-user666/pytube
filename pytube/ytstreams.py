@@ -1,4 +1,8 @@
 # This module is made for getting json of yt video details
+
+import re
+
+
 def get_streams(YouTube):
     """
     YouTube : Youtube object
@@ -12,7 +16,8 @@ def get_streams(YouTube):
     progressive = qualities['formats']
     streamList = []
     for i in dash:
-        mimeType = i['mimeType']
+        mimeTypeDetails = i['mimeType'].split(";")
+        mimeType = mimeTypeDetails[0]
         itag = i['itag']
         stream = {
             'itag': itag,
@@ -22,7 +27,11 @@ def get_streams(YouTube):
         if 'video' in mimeType:
             stream['fps'] = i['fps']
             stream['resolution'] = i['qualityLabel']
-            stream['pixel_size'] = f"{i['width']}x{i['height']}"
+            stream['width'] =i['width']
+            stream['height'] = i['height']
+            stream['video_codec'] = re.findall('"[^"]*"', mimeTypeDetails[-1])[0].replace('"', '')
+        if 'audio' in mimeType:
+            stream['audio_codec'] = re.findall('"[^"]*"', mimeTypeDetails[-1])[0].replace('"', '')
         try:
             stream['file_size'] = int(i['contentLength'])
         except KeyError:
@@ -31,17 +40,25 @@ def get_streams(YouTube):
         streamList.append(stream)
 
     for i in progressive:
-        mimeType = i['mimeType']
+        mimeTypeDetails = i['mimeType'].split(";")
+        mimeType = mimeTypeDetails[0]
         itag = i['itag']
         fps = i['fps']
         res = i['qualityLabel']
-        pixelsize = f"{i['width']}x{i['height']}"
+        width =i['width']
+        height = i['height']
+        codecs = re.findall('"[^"]*"', mimeTypeDetails[-1])[0].replace('"', '').split(', ')
+        video_codec = codecs[0]
+        audio_codec = codecs[1]
         stream = {
             'itag': itag,
             'mime_type': mimeType,
             'fps': fps,
             'resolution': res,
-            'pixel_size': pixelsize
+            'width': width,
+            'height': height,
+            'video_codec': video_codec,
+            'audio_codec': audio_codec
         }
 
         try:
