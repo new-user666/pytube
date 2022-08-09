@@ -19,9 +19,11 @@ def get_streams(YouTube):
         mimeTypeDetails = i['mimeType'].split(";")
         mimeType = mimeTypeDetails[0]
         itag = i['itag']
+        url = i['url']
         stream = {
             'itag': itag,
             'mime_type': mimeType
+            'url':url
         }
 
         if 'video' in mimeType:
@@ -50,10 +52,12 @@ def get_streams(YouTube):
         codecs = re.findall('"[^"]*"', mimeTypeDetails[-1])[0].replace('"', '').split(', ')
         video_codec = codecs[0]
         audio_codec = codecs[1]
+        url = i['url']
         stream = {
             'itag': itag,
             'mime_type': mimeType,
             'fps': fps,
+            'url':url,
             'resolution': res,
             'width': width,
             'height': height,
