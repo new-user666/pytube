@@ -22,7 +22,7 @@ def get_streams(YouTube):
         url = i['url']
         stream = {
             'itag': itag,
-            'mime_type': mimeType
+            'mime_type': mimeType,
             'url':url
         }
 
