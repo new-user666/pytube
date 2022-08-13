@@ -1,17 +1,25 @@
 # This module is made for getting json of yt video details
 
 import re
+from typing import List
+from pytube import YouTube, itags
 
+def get_streams(
+    YouTube_URL: str
+) -> List:
+    """Get streams details of a YouTube video
 
-def get_streams(YouTube):
+    Parameters:
+        YouTube_URL (``str``):
+            URL of a YouTube video.
+
+    Usage:
+        from pytube import get_streams
+        streams = get_streams(yt_url)
     """
-    YouTube : Youtube object
-        from pytube.ytstreams import get_streams
-        yt = YouTube(yt_url)
-        get_streams(yt)
-    """
-    streams = YouTube.streams
-    qualities = YouTube.vid_info['streamingData']
+    youtube = YouTube(YouTube_URL)
+    streams = youtube.streams
+    qualities = youtube.vid_info['streamingData']
     dash = qualities['adaptiveFormats']
     progressive = qualities['formats']
     streamList = []
@@ -34,6 +42,8 @@ def get_streams(YouTube):
             stream['video_codec'] = re.findall('"[^"]*"', mimeTypeDetails[-1])[0].replace('"', '')
         if 'audio' in mimeType:
             stream['audio_codec'] = re.findall('"[^"]*"', mimeTypeDetails[-1])[0].replace('"', '')
+            abr = itags.get_format_profile(itag)['abr']
+            if abr: stream['abr'] = abr
         try:
             stream['file_size'] = int(i['contentLength'])
         except KeyError:
