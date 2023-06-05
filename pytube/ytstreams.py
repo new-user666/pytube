@@ -1,23 +1,29 @@
 # This module is made for getting json of yt video details
 
 import re
-from typing import List
+from typing import List, Dict
 from pytube import YouTube, itags
 
 def get_streams(
-    YouTube_URL: str
+    YouTube_URL: Dict[str, YouTube]
 ) -> List:
     """Get streams details of a YouTube video
 
     Parameters:
-        YouTube_URL (``str``):
-            URL of a YouTube video.
+        YouTube_URL (``str || YouTube``):
+            URL of a YouTube video || YouTube 
 
     Usage:
         from pytube import get_streams
         streams = get_streams(yt_url)
+                    ||
+        from pytube import YouTube, get_streams 
+        streams = get_streams(YouTube(yt_url))
     """
-    youtube = YouTube(YouTube_URL)
+    if (type(YouTube_URL) == str):
+        youtube = YouTube(YouTube_URL)
+    else:
+        youtube = YouTube_URL
     streams = youtube.streams
     qualities = youtube.vid_info['streamingData']
     dash = qualities['adaptiveFormats']
